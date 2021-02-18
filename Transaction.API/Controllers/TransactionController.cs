@@ -43,19 +43,6 @@ namespace Transaction.API.Controllers
                 return BadRequest("Invalid entries!");
 
             await _ontext.Transactions.AddAsync(transaction);
-            return Ok(transaction);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromBody] Transaction transaction, Guid id)
-        {
-            if(transaction.ID != id)
-                return BadRequest("Invalid record!");
-
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid entries!");
-
-            _ontext.Transactions.Update(transaction);
             await _ontext.SaveChangesAsync();
 
             return Ok(transaction);
