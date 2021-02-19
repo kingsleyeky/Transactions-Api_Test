@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Transaction.Data.Repositories
 {
-    interface ITransactionRepository
+    public interface ITransactionRepository
     {
     }
 }

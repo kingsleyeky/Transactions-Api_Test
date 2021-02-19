@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Transaction.Business.Services
 {
-    interface IPersonService
+    public interface IPersonService
     {
     }
 }
