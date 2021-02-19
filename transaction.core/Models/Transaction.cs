@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Transaction.API
+namespace Transaction.Models.Core
 {
     public class Transaction
     {

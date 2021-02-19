@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Transaction.Models.Core;
 
-namespace Transaction.API
+namespace Transaction.Data
 {
     public class TContext : DbContext
     {
@@ -11,7 +12,7 @@ namespace Transaction.API
         }
 
         public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<Models.Core.Transaction> Transactions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
 
     }
