@@ -17,8 +17,4 @@
     <ProjectReference Include="..\transaction.core\Transaction.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\impl\" />
-  </ItemGroup>
-
 </Project>

@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Services\impl\" />
+    <ProjectReference Include="..\transaction.core\Transaction.Core.csproj" />
+    <ProjectReference Include="..\transaction.data\Transaction.Data.csproj" />
   </ItemGroup>
 
 </Project>

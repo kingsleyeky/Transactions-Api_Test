@@ -4,12 +4,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Transaction.Data.Repositories
+namespace Transaction.Data.Repositories.Interfaces
 {
     public interface IUnitOfWork
-    {
-        IRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
-        
+    {        
         Task<int> SaveChangesAsync();
        
     }
