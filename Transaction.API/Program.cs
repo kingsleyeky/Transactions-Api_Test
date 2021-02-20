@@ -17,6 +17,8 @@ namespace Transaction.API
             Log.Logger = new LoggerConfiguration()
                .Enrich.FromLogContext()
                .WriteTo.Console()
+               .WriteTo.Debug(outputTemplate: DateTime.Now.ToString())
+               .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
                .CreateLogger();
 
             CreateHostBuilder(args).Build().Run();
