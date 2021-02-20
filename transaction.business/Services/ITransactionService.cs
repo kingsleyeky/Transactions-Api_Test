@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-
+using Transaction.Data.DTOs;
 
 namespace Transaction.Business.Services
 {
@@ -11,6 +11,6 @@ namespace Transaction.Business.Services
         Task<List<Models.Core.Transaction>> Get();
         Task<Models.Core.Transaction> Get(Guid id);
         Task<Models.Core.Transaction> Create(Models.Core.Transaction transaction);
-        Task<List<Models.Core.Transaction>> GetTransactionsByPersonIDAsync(Guid id);
+        Task<List<PersonTransactionDTO>> GetTransactionsByPersonIDAsync(Guid id);
     }
 }

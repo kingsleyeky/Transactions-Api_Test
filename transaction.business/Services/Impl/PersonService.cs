@@ -23,7 +23,7 @@ namespace Transaction.Business.Services.Impl
         {
             var acct = await _personRepository.AddAsync(account);
             await _unitOfWork.SaveChangesAsync();
-            return acct; // confirm everything is saved successfully
+            return acct; 
         }
 
         public async Task Update(Person account)

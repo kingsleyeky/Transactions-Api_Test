@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Transaction.Business.Services;
+using Transaction.Models.Core;
 
 namespace Transaction.API.Controllers
 {
@@ -12,24 +14,24 @@ namespace Transaction.API.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly TContext _ontext;
+        private IAccountService _accountService;
 
-        public AccountController(TContext context)
+        public AccountController(IAccountService accountService)
         {
-            _ontext = context;
+            _accountService = accountService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<List<Account>>> Get()
         {
-            var result = await _ontext.People.ToListAsync();
+            var result = await _accountService.Get();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(Guid id)
+        public async Task<ActionResult<Account>> Get(Guid id)
         {
-            var result = await _ontext.Accounts.FindAsync(id);
+            var result = await _accountService.Get(id);
             if (result == null)
                 return BadRequest("Record not found!");
 
@@ -37,9 +39,9 @@ namespace Transaction.API.Controllers
         }
 
         [HttpGet("[action]/{personId}")]
-        public async Task<ActionResult> GetAccountByPersonID(Guid personId)
+        public async Task<ActionResult<Account>> GetAccountByPersonID(Guid personId)
         {
-            var result = await _ontext.Accounts.FirstOrDefaultAsync(a => a.PersonID == personId);
+            var result = await _accountService.GetAccountByPersonID(personId);
             if (result == null)
                 return BadRequest("Record not found!");
 
@@ -47,27 +49,25 @@ namespace Transaction.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Account account)
+        public async Task<ActionResult<Account>> Post([FromBody] Account account)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid entries!");
 
-            await _ontext.Accounts.AddAsync(account);
+            account = await _accountService.Create(account);
             return Ok(account);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromBody] Account account, Guid id)
+        public async Task<ActionResult<Account>> Put([FromBody] Account account, Guid id)
         {
-            if(account.ID != id)
+            if (account.ID != id)
                 return BadRequest("Invalid record!");
 
             if (!ModelState.IsValid)
                 return BadRequest("Invalid entries!");
 
-            _ontext.Accounts.Update(account);
-            await _ontext.SaveChangesAsync();
-
+            await _accountService.Update(account);
             return Ok(account);
         }
     }

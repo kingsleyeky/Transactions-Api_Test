@@ -7,8 +7,8 @@ using Transaction.Data.Repositories.Interfaces;
 
 namespace Transaction.Data.Repositories.Infrastructure
 {
-    public class UnitOfWork<TContext> : IUnitOfWork<TContext>, IUnitOfWork where TContext : DbContext
-    {      
+    public class UnitOfWork : IUnitOfWork
+    {
         public TContext dbContext { get; }
 
         public UnitOfWork(TContext context)
@@ -16,7 +16,7 @@ namespace Transaction.Data.Repositories.Infrastructure
             dbContext = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-       
+
         /// <summary>
         /// Saves the underlying changes to the database asynchronously
         /// </summary>
@@ -24,6 +24,6 @@ namespace Transaction.Data.Repositories.Infrastructure
         {
             return await dbContext.SaveChangesAsync();
         }
-                       
+
     }
 }

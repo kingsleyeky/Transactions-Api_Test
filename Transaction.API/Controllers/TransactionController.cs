@@ -5,6 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Transaction.Business.Services;
+using Transaction.Data.DTOs;
+using Transaction.Models.Core;
 
 namespace Transaction.API.Controllers
 {
@@ -12,24 +15,24 @@ namespace Transaction.API.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly TContext _ontext;
+        private ITransactionService _transactionService;
 
-        public TransactionController(TContext context)
+        public TransactionController(ITransactionService transactionService)
         {
-            _ontext = context;
+            _transactionService = transactionService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<List<Models.Core.Transaction>>> Get()
         {
-            var result = await _ontext.Transactions.ToListAsync();
+            var result = await _transactionService.Get();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(Guid id)
+        public async Task<ActionResult<Models.Core.Transaction>> Get(Guid id)
         {
-            var result = await _ontext.Transactions.FindAsync(id);
+            var result = await _transactionService.Get(id);
             if (result == null)
                 return BadRequest("Record not found!");
 
@@ -37,15 +40,24 @@ namespace Transaction.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Transaction transaction)
+        public async Task<ActionResult<Models.Core.Transaction>> Post([FromBody] Models.Core.Transaction transaction)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid entries!");
 
-            await _ontext.Transactions.AddAsync(transaction);
-            await _ontext.SaveChangesAsync();
+            transaction = await _transactionService.Create(transaction);
 
             return Ok(transaction);
+        }
+
+        [HttpGet("[action]/{personId}")]
+        public async Task<ActionResult<List<PersonTransactionDTO>>> GetTransactionsByPersonID(Guid personId)
+        {
+            var result = await _transactionService.GetTransactionsByPersonIDAsync(personId);
+            if (result == null)
+                return BadRequest("Record not found!");
+
+            return Ok(result);
         }
     }
 }

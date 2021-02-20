@@ -12,8 +12,4 @@ namespace Transaction.Data.Repositories.Interfaces
        
     }
 
-    public interface IUnitOfWork<TContext> : IUnitOfWork where TContext : DbContext
-    {
-        TContext dbContext { get; }
-    }
 }

@@ -5,6 +5,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Transaction.Business.Services;
+using Transaction.Models.Core;
 
 namespace Transaction.API.Controllers
 {
@@ -12,24 +14,24 @@ namespace Transaction.API.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        private readonly TContext _ontext;
+        private IPersonService _personService;
 
-        public PersonController(TContext context)
+        public PersonController(IPersonService personService)
         {
-            _ontext = context;
+            _personService = personService;
         }
 
         [HttpGet]
-        public async Task<ActionResult> Get()
+        public async Task<ActionResult<List<Person>>> Get()
         {
-            var result = await _ontext.People.ToListAsync();
+            var result = await _personService.Get();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(Guid id)
+        public async Task<ActionResult<Person>> Get(Guid id)
         {
-            var result = await _ontext.People.FindAsync(id);
+            var result = await _personService.Get(id);
             if (result == null)
                 return BadRequest("Record not found!");
 
@@ -37,27 +39,25 @@ namespace Transaction.API.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Person person)
+        public async Task<ActionResult<Person>> Post([FromBody] Person person)
         {
             if (!ModelState.IsValid)
                 return BadRequest("Invalid entries!");
 
-            await _ontext.People.AddAsync(person);
+            person = await _personService.Create(person);
             return Ok(person);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put([FromBody] Person person, Guid id)
+        public async Task<ActionResult<Person>> Put([FromBody] Person person, Guid id)
         {
-            if(person.ID != id)
+            if (person.ID != id)
                 return BadRequest("Invalid record!");
 
             if (!ModelState.IsValid)
                 return BadRequest("Invalid entries!");
 
-            _ontext.People.Update(person);
-            await _ontext.SaveChangesAsync();
-
+            await _personService.Update(person);
             return Ok(person);
         }
     }
