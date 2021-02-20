@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Transaction.Business.Services;
 using Transaction.Models.Core;
@@ -12,11 +10,11 @@ namespace Transaction.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountController : BaseController
     {
         private IAccountService _accountService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, ILogger logger) : base(logger)
         {
             _accountService = accountService;
         }
@@ -24,51 +22,65 @@ namespace Transaction.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Account>>> Get()
         {
-            var result = await _accountService.Get();
-            return Ok(result);
+            return await ExecuteRequestAsync(async () =>
+            {
+                var result = await _accountService.Get();
+                return result;
+            });
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Account>> Get(Guid id)
         {
-            var result = await _accountService.Get(id);
-            if (result == null)
-                return BadRequest("Record not found!");
-
-            return Ok(result);
+            return await ExecuteRequestAsync(async () =>
+            {
+                var result = await _accountService.Get(id);
+                if (result == null)
+                    throw new ApplicationException("Record not found!");
+                return result;
+            });
         }
 
         [HttpGet("[action]/{personId}")]
         public async Task<ActionResult<Account>> GetAccountByPersonID(Guid personId)
         {
-            var result = await _accountService.GetAccountByPersonID(personId);
-            if (result == null)
-                return BadRequest("Record not found!");
+            return await ExecuteRequestAsync(async () =>
+           {
+               var result = await _accountService.GetAccountByPersonID(personId);
 
-            return Ok(result);
+               if (result == null)
+                   throw new ApplicationException("Record not found!");
+               return result;
+           });
         }
 
         [HttpPost]
         public async Task<ActionResult<Account>> Post([FromBody] Account account)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid entries!");
+            return await ExecuteRequestAsync(async () =>
+            {
+                if (!ModelState.IsValid)
+                    throw new ApplicationException("Invalid entries!");
+                account = await _accountService.Create(account);
 
-            account = await _accountService.Create(account);
-            return Ok(account);
+                return account;
+            });
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<Account>> Put([FromBody] Account account, Guid id)
         {
-            if (account.ID != id)
-                return BadRequest("Invalid record!");
+            return await ExecuteRequestAsync(async () =>
+            {
+                if (account.ID != id)
+                    throw new ApplicationException("Invalid record!");
 
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid entries!");
+                if (!ModelState.IsValid)
+                    throw new ApplicationException("Invalid entries!");
 
-            await _accountService.Update(account);
-            return Ok(account);
+                await _accountService.Update(account);
+                return account;
+            });
         }
     }
 }

@@ -1,23 +1,20 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Transaction.Business.Services;
 using Transaction.Data.DTOs;
-using Transaction.Models.Core;
 
 namespace Transaction.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TransactionController : ControllerBase
+    public class TransactionController : BaseController
     {
         private ITransactionService _transactionService;
 
-        public TransactionController(ITransactionService transactionService)
+        public TransactionController(ITransactionService transactionService, ILogger logger) : base(logger)
         {
             _transactionService = transactionService;
         }
@@ -25,39 +22,49 @@ namespace Transaction.API.Controllers
         [HttpGet]
         public async Task<ActionResult<List<Models.Core.Transaction>>> Get()
         {
-            var result = await _transactionService.Get();
-            return Ok(result);
+            return await ExecuteRequestAsync(async () =>
+            {
+                var result = await _transactionService.Get();
+                return result;
+            });
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Models.Core.Transaction>> Get(Guid id)
         {
-            var result = await _transactionService.Get(id);
-            if (result == null)
-                return BadRequest("Record not found!");
-
-            return Ok(result);
+            return await ExecuteRequestAsync(async () =>
+            {
+                var result = await _transactionService.Get(id);
+                if (result == null)
+                    throw new ApplicationException("Record not found!");
+                return result;
+            });
         }
 
         [HttpPost]
         public async Task<ActionResult<Models.Core.Transaction>> Post([FromBody] Models.Core.Transaction transaction)
         {
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid entries!");
+            return await ExecuteRequestAsync(async () =>
+            {
+                if (!ModelState.IsValid)
+                    throw new ApplicationException("Invalid entries!");
+                transaction = await _transactionService.Create(transaction);
 
-            transaction = await _transactionService.Create(transaction);
-
-            return Ok(transaction);
+                return transaction;
+            });
         }
 
         [HttpGet("[action]/{personId}")]
         public async Task<ActionResult<List<PersonTransactionDTO>>> GetTransactionsByPersonID(Guid personId)
         {
-            var result = await _transactionService.GetTransactionsByPersonIDAsync(personId);
-            if (result == null)
-                return BadRequest("Record not found!");
+            return await ExecuteRequestAsync(async () =>
+            {
+                var result = await _transactionService.GetTransactionsByPersonIDAsync(personId);
+                if (result == null)
+                    throw new ApplicationException("Record not found!");
 
-            return Ok(result);
+                return result;
+            });
         }
     }
 }

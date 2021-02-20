@@ -10,6 +10,7 @@ using Transaction.Business.Services;
 using Transaction.Business.Services.Impl;
 using Transaction.Data.Repositories.Interfaces;
 using Transaction.Data.Repositories.Impl;
+using Serilog;
 
 namespace Transaction.API
 {
@@ -34,6 +35,8 @@ namespace Transaction.API
         {
             ConfigureDatabase(services);
 
+            services.AddSingleton(Log.Logger);
+
             // configure unitof work
             services.AddScoped<IUnitOfWork, Data.Repositories.Infrastructure.UnitOfWork>();
             // configure repositories
@@ -51,7 +54,7 @@ namespace Transaction.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "My Transaction API V1",
+                    Title = "Okon-Kufre Transaction API V1",
                     Version = "v1"
                 });
             });
@@ -80,8 +83,10 @@ namespace Transaction.API
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My Transaction API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Okon-Kufre Transaction API V1");
+                c.RoutePrefix = string.Empty;
             });
+
 
         }
     }

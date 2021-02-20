@@ -19,16 +19,19 @@ namespace Transaction.Business.Services.Impl
             _personRepository = personRepository;
         }
 
-        public async Task<Person> Create(Person account)
+        public async Task<Person> Create(Person person)
         {
-            var acct = await _personRepository.AddAsync(account);
+            if (person.ID == Guid.Empty)
+                person.ID = Guid.NewGuid();
+
+            var acct = await _personRepository.AddAsync(person);
             await _unitOfWork.SaveChangesAsync();
             return acct; 
         }
 
-        public async Task Update(Person account)
+        public async Task Update(Person person)
         {
-            _personRepository.Update(account);
+            _personRepository.Update(person);
             await _unitOfWork.SaveChangesAsync();
         }
 

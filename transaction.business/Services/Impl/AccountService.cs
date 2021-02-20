@@ -21,6 +21,9 @@ namespace Transaction.Business.Services.Impl
 
         public async Task<Account> Create(Account account)
         {
+            if (account.ID == Guid.Empty)
+                account.ID = Guid.NewGuid();
+
             var acct = await _accountRepository.AddAsync(account);
             await _unitOfWork.SaveChangesAsync();
             return acct; // confirm everything is saved successfully
