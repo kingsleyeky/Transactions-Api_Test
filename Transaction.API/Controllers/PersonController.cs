@@ -22,7 +22,7 @@ namespace Transaction.API.Controllers
         }
 
         [HttpGet]
-        [Route("AllPerson")]
+      [Route("AllPerson")]
         public async Task<ActionResult> Get()
         {
             var result = await _person.GetallPerson();
@@ -56,7 +56,7 @@ namespace Transaction.API.Controllers
 
             try
             {
-              
+
                 dynamic result = await _person.UpdatePerson(person, Id);
                 if (result.Success == false)
                 {
@@ -67,7 +67,7 @@ namespace Transaction.API.Controllers
             }
             catch (Exception ex)
             {
-               
+
 
                 return BadRequest(new { Message = ex.Message + ":" + ex.StackTrace });
             }

@@ -39,10 +39,10 @@ namespace Transaction.API.Controllers
             return Ok(result);
 
 
-            
+
         }
 
-        
+
 
         [Route("person/{personId}")]
         [HttpGet]

@@ -19,7 +19,7 @@ namespace Transaction.API.Controllers
         public TransactionController(ITransaction tranc)
         {
             _tranc = tranc;
-            // _ontext = context;
+            
         }
 
         [HttpGet]
