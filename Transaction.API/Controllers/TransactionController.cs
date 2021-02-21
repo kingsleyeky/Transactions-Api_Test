@@ -1,51 +1,53 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿//using Microsoft.AspNetCore.Http;
+//using Microsoft.AspNetCore.Mvc;
+//using Microsoft.EntityFrameworkCore;
+//using System;
+//using System.Collections.Generic;
+//using System.Linq;
+//using System.Threading.Tasks;
+//using Transaction.Service;
 
-namespace Transaction.API.Controllers
-{
-    [Route("api/[controller]")]
-    [ApiController]
-    public class TransactionController : ControllerBase
-    {
-        private readonly TContext _ontext;
+//namespace Transaction.API.Controllers
+//{
+//    [Route("api/[controller]")]
+//    [ApiController]
+//    public class TransactionController : ControllerBase
+//    {
+//        private readonly ITransaction _tranc;
 
-        public TransactionController(TContext context)
-        {
-            _ontext = context;
-        }
+//       public TransactionController(ITransaction tranc)
+//       {
+//            _tranc = tranc;
+//           // _ontext = context;
+//       }
 
-        [HttpGet]
-        public async Task<ActionResult> Get()
-        {
-            var result = await _ontext.Transactions.ToListAsync();
-            return Ok(result);
-        }
+//        [HttpGet]
+//        public async Task<ActionResult> Get()
+//        {
+//            var result = await _tranc.Transactions.ToListAsync();
+//            return Ok(result);
+//        }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult> Get(Guid id)
-        {
-            var result = await _ontext.Transactions.FindAsync(id);
-            if (result == null)
-                return BadRequest("Record not found!");
+//        [HttpGet("{id}")]
+//        public async Task<ActionResult> Get(Guid id)
+//        {
+//            var result = await _ontext.Transactions.FindAsync(id);
+//            if (result == null)
+//                return BadRequest("Record not found!");
 
-            return Ok(result);
-        }
+//            return Ok(result);
+//        }
 
-        [HttpPost]
-        public async Task<ActionResult> Post([FromBody] Transaction transaction)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest("Invalid entries!");
+//        [HttpPost]
+//        public async Task<ActionResult> Post([FromBody] Transaction transaction)
+//        {
+//            if (!ModelState.IsValid)
+//                return BadRequest("Invalid entries!");
 
-            await _ontext.Transactions.AddAsync(transaction);
-            await _ontext.SaveChangesAsync();
+//            await _ontext.Transactions.AddAsync(transaction);
+//            await _ontext.SaveChangesAsync();
 
-            return Ok(transaction);
-        }
-    }
-}
+//            return Ok(transaction);
+//        }
+//    }
+//}

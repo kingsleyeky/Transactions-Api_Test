@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Transaction.API
+namespace Transaction.Entity
 {
-    public class Person
+   public class Person
     {
+        [Key]
         public Guid ID { get; set; }
         public string Surname { get; set; }
         public string Firstname { get; set; }

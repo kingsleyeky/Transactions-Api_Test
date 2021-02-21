@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Transaction.Service;
+using Transaction.Service.Implementation;
 
 namespace Transaction.API
 {
@@ -33,8 +35,16 @@ namespace Transaction.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<TContext>(option => option.
+            //UseSqlServer(Configuration.GetConnectionString("Transaction")), ServiceLifetime.Transient);
+
             ConfigureDatabase(services);
             services.AddControllers();
+            services.AddScoped<IPerson, Personservice>();
+            services.AddScoped<IAccount, Accountservice>();
+            services.AddScoped<ITransaction, Transactionservice>();
+
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +54,12 @@ namespace Transaction.API
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
 
             app.UseHttpsRedirection();
 

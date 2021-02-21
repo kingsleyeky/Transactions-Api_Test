@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Transaction.Entity;
 
 namespace Transaction.API
 {
@@ -11,7 +12,7 @@ namespace Transaction.API
         }
 
         public virtual DbSet<Person> People { get; set; }
-        public virtual DbSet<Transaction> Transactions { get; set; }
+        public virtual DbSet<Transactions> Transactions { get; set; }
         public virtual DbSet<Account> Accounts { get; set; }
 
     }

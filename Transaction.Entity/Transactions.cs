@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Text;
 
-namespace Transaction.API
+namespace Transaction.Entity
 {
-    public class Transaction
+    public class Transactions
     {
+        [Key]
         public Guid ID { get; set; }
         public decimal Amount { get; set; }
         public TransactionType TransactionType { get; set; }
