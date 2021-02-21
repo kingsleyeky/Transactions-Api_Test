@@ -34,7 +34,7 @@ namespace Transaction.API.Controllers
         public async Task<ActionResult> Get(Guid id)
         {
             var result = _tranc.GetTransBypersonID(id);
-            if (result == null)
+            if (result == null) 
                 return BadRequest("Record not found!");
 
             return Ok(result);
