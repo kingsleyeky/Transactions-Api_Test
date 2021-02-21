@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,7 +45,29 @@ namespace Transaction.API
             services.AddScoped<IAccount, Accountservice>();
             services.AddScoped<ITransaction, Transactionservice>();
 
-            services.AddSwaggerGen();
+            // services.AddSwaggerGen();
+
+            //services.AddSwaggerGen(c =>
+            //{
+            //    c.SwaggerDoc("v1", new OpenApiInfo
+            //    {
+            //        Version = "v1",
+            //        Title = "Bank Transaction API",
+            //        Description = "A simple example ASP.NET Core Web API",
+            //        TermsOfService = new Uri("https://localhost:44343/"),
+            //        Contact = new OpenApiContact
+            //        {
+            //            Name = "",
+            //            Email = "",
+            //            Url = new Uri("https://localhost:44343/"),
+            //        },
+            //        License = new OpenApiLicense
+            //        {
+            //            Name = "Use under LICX",
+            //            Url = new Uri("https://localhost:44343/"),
+            //        }
+            //    });
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -54,12 +77,12 @@ namespace Transaction.API
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-            });
+            //app.UseSwaggerUI(c =>
+            //{
+            //    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            //    c.RoutePrefix = string.Empty;
+            //});
 
             app.UseHttpsRedirection();
 

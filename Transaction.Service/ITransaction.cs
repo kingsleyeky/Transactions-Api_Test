@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Transaction.Entity;
 
 namespace Transaction.Service
 {
@@ -11,6 +12,7 @@ namespace Transaction.Service
         Task GetTransactionType(string transtype);
         Task GetTransactionAmount(string transAmount);
         Task GetTransactionBalance(string transBalance);
-        Task GetTransBypersonID(int personID);
+        Task<object> GetTransBypersonID(Guid personID);
+        Task<object> AddTransaction(Transactions transactions);
     }
 }
