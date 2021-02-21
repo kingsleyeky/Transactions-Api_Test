@@ -22,6 +22,7 @@ namespace Transaction.API.Controllers
         }
 
         [HttpGet]
+        [Route("AllPerson")]
         public async Task<ActionResult> Get()
         {
             var result = await _person.GetallPerson();
@@ -29,7 +30,7 @@ namespace Transaction.API.Controllers
         }
 
         [HttpGet]
-        [Route("AllPerson")]
+        [Route("AllPerson/{Id}")]
         public async Task<ActionResult> Get(Guid id)
         {
             var result = await _person.GetPersonById(id);
@@ -49,8 +50,8 @@ namespace Transaction.API.Controllers
             return Ok(person);
         }
 
-        [HttpPost("UpdatePerson/{Id}")]
-        public async Task<IActionResult> UpdateDonation(Person person, Guid Id)
+        [HttpPut("UpdatePerson/{Id}")]
+        public async Task<IActionResult> UpdatePerson(Person person, Guid Id)
         {
 
             try

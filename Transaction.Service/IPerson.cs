@@ -9,8 +9,6 @@ namespace Transaction.Service
    public interface IPerson
     {
         Task<object> GetPersonById(Guid Id);
-        Task GetPersonName(string Name);
-        Task GetPersonEmail(string Email);
         Task<object> AddPerson(Person person);
         Task<object> GetallPerson();
         Task<object> UpdatePerson(Person person, Guid Id);

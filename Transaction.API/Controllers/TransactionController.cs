@@ -22,12 +22,13 @@ namespace Transaction.API.Controllers
             // _ontext = context;
         }
 
-        //[HttpGet]
-        //public async Task<ActionResult> Get()
-        //{
-        //    var result = await _tranc.Transactions.ToListAsync();
-        //    return Ok(result);
-        //}
+        [HttpGet]
+        [Route("{AllTransaction}")]
+        public async Task<ActionResult> Get()
+        {
+            var result = await _tranc.GetTransaction();
+            return Ok(result);
+        }
 
         [HttpGet("GetTransaction/{id}")]
         public async Task<ActionResult> Get(Guid id)

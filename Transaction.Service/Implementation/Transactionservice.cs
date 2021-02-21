@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,22 +24,6 @@ namespace Transaction.Service.Implementation
 
         // public TContext Context { get; }
         ServiceResponse res = new ServiceResponse();
-
-
-        public Task GetTransactionAmount(string transAmount)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task GetTransactionBalance(string transBalance)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task GetTransactionID(int transID)
-        {
-            throw new NotImplementedException();
-        }
 
         public Task GetTransactionType(string transtype)
         {
@@ -146,6 +131,39 @@ namespace Transaction.Service.Implementation
             catch (Exception ex)
             {
                 return null;
+            }
+        }
+
+        public async Task<object> GetTransaction()
+        {
+
+           
+           
+            try
+            {
+                var result = await _tcontex.Transactions.ToListAsync();
+
+                if (result == null)
+                {
+                    res.Data = null;
+                    res.Message = "List not Available";
+                    res.Success = false; ;
+                    return res;
+                }
+                else
+                {
+                    res.Data = result;
+                    res.Message = "List of Trasactions";
+                    res.Success = true; ;
+                    return res;
+                }
+            }
+            catch (Exception ex)
+            {
+                res.Success = false;
+                res.Message = ex.Message + ":" + ex.StackTrace;
+                res.Data = null;
+                return res;
             }
         }
     }

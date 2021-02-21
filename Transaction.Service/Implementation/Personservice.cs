@@ -51,15 +51,6 @@ namespace Transaction.Service.Implementation
 
         }
 
-        public Task GetPersonEmail(string Email)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task GetPersonName(string Name)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<object> AddPerson(Person person)
         {
