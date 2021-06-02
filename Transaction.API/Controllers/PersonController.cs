@@ -16,7 +16,7 @@ namespace Transaction.API.Controllers
     {
         private readonly IPerson _person;
 
-        public PersonController(IPerson person)
+        public PersonController(IPerson person)  
         {
             _person = person;
         }
