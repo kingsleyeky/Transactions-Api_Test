@@ -1,74 +1,93 @@
-﻿//using Microsoft.AspNetCore.Http;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.EntityFrameworkCore;
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Transaction.Entity;
+using Transaction.Service;
 
-//namespace Transaction.API.Controllers
-//{
-//    [Route("api/[controller]")]
-//    [ApiController]
-//    public class AccountController : ControllerBase
-//    {
-//        private readonly TContext _ontext;
+namespace Transaction.API.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
+    {
+        private readonly IAccount _account;
 
-//        public AccountController(TContext context)
-//        {
-//            _ontext = context;
-//        }
+        public AccountController(IAccount account)
+        {
+            _account = account;
+        }
 
-//        [HttpGet]
-//        public async Task<ActionResult> Get()
-//        {
-//            var result = await _ontext.People.ToListAsync();
-//            return Ok(result);
-//        }
+        [HttpGet]
+        [Route("{AllAccount}")]
+        public async Task<ActionResult> Get()
+        {
+            var result = await _account.GetallAccount();
+            return Ok(result);
+        }
 
-//        [HttpGet("{id}")]
-//        public async Task<ActionResult> Get(Guid id)
-//        {
-//            var result = await _ontext.Accounts.FindAsync(id);
-//            if (result == null)
-//                return BadRequest("Record not found!");
+        [HttpGet("account/{Id}")]
+        public async Task<ActionResult> Get(Guid id)
+        {
+            var result = await _account.GetAccountById(id);
+            if (result == null)
+                return BadRequest("Record not found!");
 
-//            return Ok(result);
-//        }
+            return Ok(result);
 
-//        [HttpGet("[action]/{personId}")]
-//        public async Task<ActionResult> GetAccountByPersonID(Guid personId)
-//        {
-//            var result = await _ontext.Accounts.FirstOrDefaultAsync(a => a.PersonID == personId);
-//            if (result == null)
-//                return BadRequest("Record not found!");
 
-//            return Ok(result);
-//        }
 
-//        [HttpPost]
-//        public async Task<ActionResult> Post([FromBody] Account account)
-//        {
-//            if (!ModelState.IsValid)
-//                return BadRequest("Invalid entries!");
+        }
 
-//            await _ontext.Accounts.AddAsync(account);
-//            return Ok(account);
-//        }
 
-//        [HttpPut("{id}")]
-//        public async Task<ActionResult> Put([FromBody] Account account, Guid id)
-//        {
-//            if(account.ID != id)
-//                return BadRequest("Invalid record!");
 
-//            if (!ModelState.IsValid)
-//                return BadRequest("Invalid entries!");
+        [Route("person/{personId}")]
+        [HttpGet]
+        public async Task<ActionResult> GetAccountByPersonID(Guid personId)
+        {
+            var result = await _account.GetAccountByPersonId(personId);
+            if (result == null)
+                return BadRequest("Record not found!");
 
-//            _ontext.Accounts.Update(account);
-//            await _ontext.SaveChangesAsync();
+            return Ok(result);
+        }
 
-//            return Ok(account);
-//        }
-//    }
-//}
+        [HttpPost("AddAccount")]
+        public async Task<ActionResult> Post([FromBody] Account account)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest("Invalid entries!");
+
+            await _account.AddAccount(account);
+            return Ok(account);
+        }
+
+        [HttpPut("UpdateAccount/{Id}")]
+        public async Task<IActionResult> UpdateAccount(Account account, Guid Id)
+        {
+
+            try
+            {
+
+                dynamic result = await _account.UpdateAccount(account, Id);
+                if (result.Success == false)
+                {
+                    return BadRequest(result);
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+
+
+                return BadRequest(new { Message = ex.Message + ":" + ex.StackTrace });
+            }
+
+
+        }
+    }
+}
